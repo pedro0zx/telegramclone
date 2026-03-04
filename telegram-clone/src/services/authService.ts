@@ -24,7 +24,7 @@ export const register = async (email: string, password: string) => {
   await createCometChatUser(uid, email);
 
   // Login no CometChat
-  await loginCometChat(uid);
+  await loginCometChat(uid, email);
 
   return userCredential.user;
 };
@@ -40,7 +40,7 @@ export const login = async (email: string, password: string) => {
   const uid = userCredential.user.uid;
 
   // Login CometChat
-  await loginCometChat(uid);
+  await loginCometChat(uid, email);
 
   return userCredential.user;
 };

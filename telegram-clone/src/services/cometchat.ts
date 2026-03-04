@@ -13,7 +13,13 @@ export const initCometChat = async () => {
   await CometChat.init(appID, appSetting);
 };
 
-export const loginToCometChat = async (uid: string, name: string) => {
+export const createCometChatUser = async (uid: string, name: string) => {
+    const user = new CometChat.User(uid);
+    user.setName(name);
+    await CometChat.createUser(user, "92384077b3684abebb027650b55f2c1ca5ab4ff6");
+};
+
+export const loginCometChat = async (uid: string, name: string) => {
     await CometChat.login(uid, "92384077b3684abebb027650b55f2c1ca5ab4ff6")
 };
 
