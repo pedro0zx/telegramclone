@@ -1,16 +1,11 @@
-import React, { useEffect, useState, useContext} from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, Button, FlatList, Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
-import { AuthContext } from "../../App";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-interface AuthContextType {
-  user: any;
-  loading: boolean;
-  logout: () => Promise<void>;
-}
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useContext } from "react";
 
 type RootStackParamList = {
   ChatList: undefined;
@@ -22,10 +17,10 @@ type ChatScreenRouteProp = RouteProp<RootStackParamList, "Chat">;
 export default function ChatScreen() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<any[]>([]);
-    const { logout } = useContext<AuthContextType>(AuthContext);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<ChatScreenRouteProp>();
     const { chatId, chatName } = route.params;
+    const { isDarkTheme } = useContext(ThemeContext);
 
     useEffect(() => {
         const listenerID = "CHAT_LISTENER";
@@ -54,14 +49,6 @@ export default function ChatScreen() {
         setMessage("");   
     };
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-        } catch (error) {
-            console.error("Erro ao fazer logout:", error);
-        }
-    };
-
     const renderMessage = ({ item }: { item: any }) => (
         <View style={[styles.messageBubble, item.isOwn ? styles.ownMessage : styles.otherMessage]}>
             <Text style={styles.messageText}>{item.text}</Text>
@@ -69,15 +56,13 @@ export default function ChatScreen() {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
+        <SafeAreaView style={[styles.container, isDarkTheme && styles.containerDark]}>
+            <View style={[styles.header, isDarkTheme && styles.headerDark]}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={24} color="#ffffff" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{chatName}</Text>
-                <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-                    <Ionicons name="exit-outline" size={28} color="#ffffff" />
-                </TouchableOpacity>
+                <View style={{ width: 40 }} />
             </View>
             <FlatList
                 data={messages}
@@ -86,12 +71,13 @@ export default function ChatScreen() {
                 style={styles.list}
                 contentContainerStyle={styles.listContent}
             />
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, isDarkTheme && styles.inputContainerDark]}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, isDarkTheme && styles.inputDark]}
                     value={message}
                     onChangeText={setMessage}
                     placeholder="Digite uma mensagem..."
+                    placeholderTextColor={isDarkTheme ? "#666666" : "#999999"}
                 />
                 <Button title="Enviar" onPress={sendMessage} />
             </View>
@@ -104,6 +90,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#ffffff",
     },
+    containerDark: {
+        backgroundColor: "#1a1a1a",
+    },
     header: {
         backgroundColor: "#2AABEE",
         padding: 15,
@@ -111,6 +100,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+    },
+    headerDark: {
+        backgroundColor: "#1a1a1a",
     },
     headerTitle: {
         color: "#ffffff",
@@ -157,6 +149,10 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: "#cccccc",
     },
+    inputContainerDark: {
+        borderTopColor: "#333333",
+        backgroundColor: "#1a1a1a",
+    },
     input: {
         flex: 1,
         borderWidth: 1,
@@ -165,6 +161,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 8,
         marginRight: 10,
+    },
+    inputDark: {
+        borderColor: "#333333",
+        color: "#ffffff",
+        backgroundColor: "#2a2a2a",
     },
 });
 

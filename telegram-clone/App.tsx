@@ -4,11 +4,20 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth } from "./src/services/firebase";
+import { ThemeProvider } from "./src/contexts/ThemeContext";
+import { ContactProvider } from "./src/contexts/ContactContext";
+import { UserProfileProvider } from "./src/contexts/UserProfileContext";
 
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import ChatListScreen from "./src/screens/ChatListScreen";
 import ChatScreen from "./src/screens/ChatScreen";
+import AddContactScreen from "./src/screens/AddContactScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import NotificationsScreen from "./src/screens/NotificationsScreen";
+import PrivacyScreen from "./src/screens/PrivacyScreen";
+import HelpScreen from "./src/screens/HelpScreen";
+import AboutScreen from "./src/screens/AboutScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -82,23 +91,35 @@ export default function App() {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout: handleLogout }}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {user ? (
-            <>
-              <Stack.Screen name="ChatList" component={ChatListScreen} />
-              <Stack.Screen name="Chat" component={ChatScreen} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <ThemeProvider>
+      <UserProfileProvider>
+        <ContactProvider>
+          <AuthContext.Provider value={{ user, loading, logout: handleLogout }}>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                {user ? (
+                  <>
+                    <Stack.Screen name="ChatList" component={ChatListScreen} />
+                    <Stack.Screen name="Chat" component={ChatScreen} />
+                    <Stack.Screen name="AddContact" component={AddContactScreen} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                    <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                    <Stack.Screen name="Privacy" component={PrivacyScreen} />
+                    <Stack.Screen name="Help" component={HelpScreen} />
+                    <Stack.Screen name="About" component={AboutScreen} />
+                  </>
+                ) : (
+                  <>
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <Stack.Screen name="Register" component={RegisterScreen} />
+                  </>
+                )}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </AuthContext.Provider>
+        </ContactProvider>
+      </UserProfileProvider>
+    </ThemeProvider>
   );
 }
 

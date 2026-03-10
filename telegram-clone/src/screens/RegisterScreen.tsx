@@ -1,23 +1,52 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { register } from '../services/authService';
+import { auth } from '../services/firebase';
+import { updateProfile } from 'firebase/auth';
 
 export default function RegisterScreen({ navigation }: any) {
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [isHovered, setIsHovered] = useState(false);
 
     const handleRegister = async () => {
+        if (!name.trim()) {
+            Alert.alert("Erro", "Por favor, digite seu nome");
+            return;
+        }
+        if (!email.trim()) {
+            Alert.alert("Erro", "Por favor, digite seu email");
+            return;
+        }
+        if (!password.trim()) {
+            Alert.alert("Erro", "Por favor, digite uma senha");
+            return;
+        }
+
         try {
-            await register(email, password);
-            // Limpar os campos após cadastro bem-sucedido
+            const userCredential = await register(email, password);
+            
+            // Update user profile with name
+            if (userCredential) {
+                await updateProfile(userCredential, {
+                    displayName: name
+                });
+            }
+
+            // Clear the fields after successful registration
+            setName("");
             setEmail("");
+            setPhone("");
             setPassword("");
-            // Direcionar para a tela de login
+            
+            // Navigate to login
             navigation.replace('Login');
         } catch (error) {
             console.error(error);
+            Alert.alert("Erro", "Falha ao realizar cadastro. Verifique os dados e tente novamente.");
         }
     };
 
@@ -29,13 +58,29 @@ export default function RegisterScreen({ navigation }: any) {
             </View>
             <TextInput
                 style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
+                placeholder="Nome completo"
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
             />
             <TextInput
                 style={styles.input}
-                placeholder="Password"
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Telefone"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Senha"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
