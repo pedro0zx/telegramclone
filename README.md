@@ -59,6 +59,11 @@ Para informações completas sobre instalação, configuração, execução e es
 - ✅ Perfil do usuário
 
 ---
+## 📄 Licença
+
+Este projeto é de uso estritamente educacional e não possui licença para uso comercial. Sinta-se livre para estudar, modificar e aprender com o código.
+
+Desenvolvido com fins educacionais para aprendizado de React Native, Expo, Firebase e CometChat.
 
 Para mais detalhes, veja a documentação completa em [telegram-clone/README.md](telegram-clone/README.md)
 
