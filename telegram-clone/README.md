@@ -338,11 +338,11 @@ set PATH=%PATH%;%ANDROID_HOME%\platform-tools
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
----
-
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+Este projeto é de uso estritamente educacional e não possui licença para uso comercial. Sinta-se livre para estudar, modificar e aprender com o código.
+
+Desenvolvido com fins educacionais para aprendizado de React Native, Expo, Firebase e CometChat.
 
 ---
 
@@ -353,8 +353,4 @@ Se você encontrar algum problema, por favor, abra uma issue no repositório.
 ---
 
 **Desenvolvido com ❤️ utilizando React Native e Expo**
-
----
-
-desenvolvido por pedro
 
